@@ -14,6 +14,10 @@ Route::get('dashboard',[DashboardController::class,'index'])
     ->name('dashboard');
 
 
+Route::view('dashboard.nuevo','dashboard.nuevo')
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard.nuevo');
+
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
