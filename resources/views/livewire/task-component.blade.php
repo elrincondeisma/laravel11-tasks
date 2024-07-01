@@ -1,6 +1,6 @@
 <!-- ====== Table Section Start -->
 <section class="bg-white ">
-    <div class="container">
+    <div class="container" >
 
        <div class="flex flex-wrap -mx-4">
           <div class="w-full px-4">
@@ -105,7 +105,7 @@
                             <button wire:click="openCreateModal({{ $task }})" class="bg-yellow-800 text-white px-4 py-2 rounded-md hover:bg-yellow-700">
                                 Editar
                             </button>
-                            <button wire:click="deleteTask({{ $task }})" class="bg-red-800 text-white px-4 py-2 rounded-md hover:bg-red-700">
+                            <button wire:click="deleteTask({{ $task }})" wire:confirm="Are you sure you want to delete this task?" class="bg-red-800 text-white px-4 py-2 rounded-md hover:bg-red-700">
                                 Borrar
                             </button>
                         </td>
