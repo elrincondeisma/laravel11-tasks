@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Task;
+use App\Models\User;
 use Livewire\Component;
 
 class TaskComponent extends Component
@@ -14,13 +15,24 @@ class TaskComponent extends Component
     public $miTarea = null;
     public $modal = false;
     public $isUpdating = false;
-
+    public $users = [];
+    public $user_id;
+    public $permiso;
+    public $modalShare = false;
     public function mount()
     {
         $this->tasks = $this->getTasks()->sortByDesc('id');
+        $this->users = User::where('id', '!=', auth()->user()->id)->get();
+    }
+    public function renderAllTasks(){
+        $this->tasks = $this->getTasks()->sortByDesc('id');
     }
     public function getTasks(){
-        return Task::where('user_id', auth()->user()->id)->get();
+        $user = auth()->user();
+        $misTareas = Task::where('user_id', auth()->user()->id)->get();
+        $misSharedTasks = $user->sharedTasks()->get();
+        return $misSharedTasks->merge($misTareas);
+        // return Task::where('user_id', auth()->user()->id)->get();
     }
 
     public function render()
@@ -53,13 +65,20 @@ class TaskComponent extends Component
     }
     public function createorUpdateTask(){
 
-            Task::updateOrCreate(['id' => $this->miTarea->id],
-                [
+            if ($this->miTarea->id) {
+                $task = Task::find($this->miTarea->id);
+                $task->update([
+                    'title' => $this->title,
+                    'description' => $this->description,
+                ]);
+            }else{
+                $task = Task::create([
+                    'title' => $this->title,
+                    'description' => $this->description,
+                    'user_id' => auth()->user()->id,
+                ]);
+            }
 
-                'title' => $this->title,
-                'description' => $this->description,
-                'user_id' => auth()->user()->id,
-            ]);
 
         $this->clearFields();
         $this->modal = false;
@@ -67,6 +86,27 @@ class TaskComponent extends Component
     }
     public function deleteTask(Task $task){
         $task->delete();
+        $this->tasks = $this->getTasks()->sortByDesc('id');
+    }
+    public function openShareModal(Task $task){
+
+        $this->modalShare = true;
+        $this->miTarea = $task;
+
+    }
+    public function closeShareModal(){
+        $this->modalShare = false;
+    }
+    public function shareTask(){
+        $task = Task::find($this->miTarea->id);
+        $user = User::find($this->user_id);
+        $user->sharedTasks()->attach($task->id, ['permission' => $this->permiso]);
+        $this->closeShareModal();
+        $this->tasks = $this->getTasks()->sortByDesc('id');
+    }
+    public function taskUnshared(Task $task){
+        $user = User::find(auth()->user()->id);
+        $user->sharedTasks()->detach($task->id);
         $this->tasks = $this->getTasks()->sortByDesc('id');
     }
 
