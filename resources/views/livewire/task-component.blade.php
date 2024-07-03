@@ -9,6 +9,10 @@
                     wire:click="openCreateModal">
                     Nuevo
                 </button>
+                <button class="bg-red-800 text-white px-4 py-2 rounded-md hover:bg-red-700 my-6"
+                    wire:click="removeAllTasks" wire:confirm="Estas seguro que quieres borrar todas las tareas?">
+                    Borrar todas las tareas
+                </button>
                 <table class="table-auto w-full">
                    <thead>
 
@@ -202,6 +206,7 @@
                             </select>
                         </div>
                     </form>
+
 
                 </div>
 
