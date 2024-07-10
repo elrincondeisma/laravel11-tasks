@@ -13,6 +13,10 @@
                     wire:click="removeAllTasks" wire:confirm="Estas seguro que quieres borrar todas las tareas?">
                     Borrar todas las tareas
                 </button>
+                <button class="bg-yellow-800 text-white px-4 py-2 rounded-md hover:bg-yellow-700 my-6"
+                    wire:click="recoverAllTasks" wire:confirm="Estas seguro que quieres recuperar todas las tareas?">
+                    Recuperar todas las tareas
+                </button>
                 <table class="table-auto w-full">
                    <thead>
 

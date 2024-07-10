@@ -120,6 +120,12 @@ class TaskComponent extends Component
         RemoveAllTasks::dispatch($user);
         $this->tasks = $this->getTasks()->sortByDesc('id');
     }
+    public function recoverAllTasks(){
+        $user = User::find(auth()->user()->id);
+        $user->tasks()->restore();
+        $this->tasks = $this->getTasks()->sortByDesc('id');
+
+    }
 
 
 }
